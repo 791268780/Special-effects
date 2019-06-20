@@ -1,0 +1,55 @@
+$width: 200px;
+$height: 325px;
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: black;
+}
+
+* { box-sizing: border-box; }
+
+.heart3d {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  margin: auto;
+  width: $width;
+  height: $height;
+  transform-style: preserve-3d;
+  animation: spin 15s infinite linear;  
+  
+  [class^="rib"] {
+    position: absolute;
+    opacity: 0;
+    width: $width;
+    height: $height;
+    border-width: 1px 1px 0 0;
+    border-radius: 50% 50% 0 / 40% 50% 0;
+   }
+
+  @for $i from 1 through 36 {
+    $delay: $i * 0.1s;
+    [class$="#{$i}"] {
+      animation: appear 1s $delay infinite alternate linear;
+      transform: rotateY($i*10deg) rotateZ(45deg) translateX(62px);
+      border: solid #f22613;
+      box-shadow: 1px 0 0 rgba(white, 0.25);
+      border-width: 1px 1px 0 0; 
+    }
+  } 
+}
+
+@keyframes spin {
+    to {
+    transform: rotateY(360deg) rotateX(360deg);
+  }
+}
+
+@keyframes appear {
+   to {
+     opacity: 1;
+  }
+}

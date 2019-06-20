@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+		
+<meta charset="utf-8">
+	
+<title></title>
+	         <style type="text/css">
+			body,p{
+				margin: 0;
+			}
+			body{
+				background-color: #000;
+			}
+			div{
+				position: relative;
+				width: 50px;
+				height: 150px;
+				margin: 100px auto;
+				animation: change 1s infinite alternate;
+			}
+			div p{
+				position: absolute;
+				top: 0;
+				width: 100px;
+				height: 120px;
+				background-color: #f00;
+				border-radius: 50px 50px 0 0;
+				transform: rotate(60deg);
+				animation: changeshadow 1s infinite alternate;
+			}
+			div .right{
+				left: -54px;
+				transform: rotate(-60deg);
+			}
+			@keyframes change{
+				
+				to{
+					transform: scale(1.2);
+				}
+			}
+			@keyframes changeshadow{
+				from{
+					box-shadow: 0 0 10px red;
+				}
+				to{
+					box-shadow: 0 0 180px red;
+				}
+			}
+			h1{
+				font-size: 100px;
+				color: red;
+				text-align: center;
+				text-shadow: 0 15px 50px red;
+			}
+		</style>
+	
+        </head>
+	     
+<body>
+		<div>
+			<p class="left"></p>
+			<p class="right"></p>
+		</div>
+		<h1>
+			 l love you
+		</h1>
+	</body>
+</html>

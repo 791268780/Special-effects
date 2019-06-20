@@ -1,0 +1,86 @@
+$bg-c: #000;
+$a: 'https://pbs.twimg.com/media/CsjHEVFW8AA7uDs.jpg';
+$c: lime;
+$ncols: 40; // same as in Jade code
+$npos: 8; // same as in Jade code
+$lh: 2; // line height
+$tr: 10s; //rotation duration
+$ts: 2s; // total switch duration
+$n: 10; // number of digits
+$digits: ();
+
+$d: $lh*1em; // digit dimension;
+$xoff: .75*$d;
+$yoff: 1.25*$d;
+
+@for $i from 0 to $n { $digits: $digits $i; }
+
+body {
+	overflow: hidden;
+	height: 100vh;
+	perspective: 40em;
+	background: radial-gradient(closest-side, 
+				rgba($bg-c, .7), $bg-c), 
+		url($a) 50% no-repeat $bg-c;
+	background-blend-mode: luminosity;
+	color: $c;
+	font: 1.5em/ #{$lh} vt323, monospace;
+}
+
+div { position: absolute; }
+
+.helix {
+	top: 50%; left: 50%;
+	transform-style: preserve-3d;
+}
+
+.col {
+	transform-style: preserve-3d;
+	animation: rx $tr linear infinite;
+	
+	@for $i from 0 to $ncols {
+		&:nth-child(#{$i + 1}) {
+			left: ($i - .5*$ncols)*$xoff;
+			animation-delay: -$i*$tr/$ncols;
+			
+			@for $j from 0 to $npos {
+				:nth-child(#{$j + 1}):before {
+					animation-delay: random($n)*$ts/-$n;
+				}
+			}
+		}
+	}
+}
+
+@keyframes rx {
+	0% { transform: rotateX(1turn); }
+}
+
+.pos {
+	overflow: hidden;
+	width: $d; height: $d;
+	background: radial-gradient(closest-side, 
+				rgba($c, .32), rgba($c, 0)) 
+		50% / #{$d} #{$xoff} no-repeat;
+	text-align: center;
+	animation: inherit;
+	animation-direction: reverse;
+	
+	@for $i from 0 to $npos {
+		&:nth-child(#{$i + 1}) {
+			top: ($i - .5*$npos)*$yoff;
+		}
+	}
+	
+	&:before {
+		position: absolute;
+		left: 0; width: inherit;
+		word-spacing: 1em;
+		animation: switch $ts steps($n) infinite;
+		content: '#{$digits}'
+	}
+}
+
+@keyframes switch {
+	to { transform: translateY(-$n*$d) }
+}

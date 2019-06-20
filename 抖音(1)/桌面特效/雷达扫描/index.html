@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>雷达扫描-兮夜老师</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Microsoft yahei, serif;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        body {
+            background: black;
+            color: #aaa;
+            font: 100%/20px helvetica, arial, sans-serif;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            box-shadow: inset 0 0 55px rgba(255, 255, 255, 0.5);
+        }
+
+        #control-panel {
+            background: rgba(0, 0, 0, .75);
+            border: 1px solid #333;
+            left: 20px;
+            padding: 10px 15px;
+            position: absolute;
+            top: 20px;
+            z-index: 2;
+            transform: translateZ(0);
+        }
+
+        p {
+            font-size: 12px;
+            margin: 0 0 5px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        button {
+            display: block;
+            margin: 10px 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="control-panel">
+        <p>单击并拖动,绘图</p>
+        <label>痕迹: </label>
+        <input type="checkbox" id="trail" name="trail" checked/>
+        <button id="clear">清除</button>
+    </div>
+
+
+    <canvas></canvas>
+
+    <script>
+        var oC = document.querySelector('canvas');
+        var cxt = oC.getContext('2d');
+        var w = oC.width = window.innerWidth;
+        var h = oC.height = window.innerHeight;
+        var orbs = [];
+        var oTrail = document.querySelector('input');
+        var oTrailTF = oTrail.checked;
+
+        var rand = function (min,max) {
+            return ~~( Math.random()*(max-min+1)+min );
+        }
+        //alert( ~~3.4 ); // 反向向下取反 -4 +3
+        for( var i=0;i<50;i++ ){
+            //console.log( rand(5,10) )
+        }
+        function createOrb(mx,my) {
+            var dx = (w/2)-mx;
+            var dy = (h/2)-my; // 0~200
+            var dist = Math.sqrt( dx*dx + dy*dy ); // 旋转的半径
+            var angle = Math.atan2(dy,dx); // 根据斜率 转成角度
+            /*  单位都是弧度
+            *   Math.tan()  对边 / 邻边  =比例
+            *   Math.atan( (x1-x2) / (y1-y2) )   斜率
+            *   返回一个 -PI 到 PI 之间的数值 表示X到点（x，y）所对应的偏移角度 -90~90
+            *
+            *   Math.atan2( y1-y2,x1-x2 )  斜率
+            *   返回一个 -PI/2 到 PI/2 之间的数值 表示X到点（x，y）所对应的偏移角度  180~180
+            *
+            *   1角度 = 1角度 * Math.PI/180弧度
+            *   1弧度 = 1弧度 * 180/Math.PI角度
+            * */
+            orbs.push({
+                x: mx, // 星球的X轴
+                y: my, // 星球的Y轴
+                lastX:mx,
+                lastY:my,
+                colorAngle:0,
+                angle: angle + Math.PI/2,  // 根据斜率 转成角度
+                size:rand(1,3)/2,  // 线宽 0.5~2
+                centerX:w/2, // 中心点坐标
+                centerY:h/2,
+                radius:dist, // 旋转的半径
+                speed:(rand(5,10)/1000)*(dist/750),
+                draw:function () {
+                    cxt.strokeStyle = 'hsl('+this.colorAngle+',100%,50%)';
+                    cxt.lineWidth = this.size;
+                    cxt.beginPath();
+                    cxt.moveTo(this.lastX,this.lastY);
+                    cxt.lineTo(this.x,this.y);
+                    cxt.stroke();
+                },
+                updata:function () {
+                    var mx = this.x;
+                    var my = this.y;
+                    this.lastX = this.x;
+                    this.lastY = this.y;
+
+                    var x1 = w/2;
+                    var y1 = h/2;
+
+                    var x2 = mx;
+                    var y2 = my;
+
+                    var rise = y1 -y2; // Y轴移动
+                    var run = x1 - x2; // X轴移动
+
+                    var slope = (rise/run);
+                    var radian = Math.atan(slope); // 斜率
+                    var angleA = Math.floor( radian*180/Math.PI ); // 角度
+
+                    if (x2 < x1 && y2 < y1) {
+                        angleA += 180;
+                    }
+                    if (x2 < x1 && y2 > y1) {
+                        angleA += 180;
+                    }
+                    if (x2 > x1 && y2 > y1) {
+                        angleA += 360;
+                    }
+                    if (y2 < y1 && slope == '-Infinity') {
+                        angleA = 90;
+                    }
+                    if (y2 > y1 && slope == 'Infinity') {
+                        angleA = 270;
+                    }
+                    if (x2 < x1 && slope == '0') {
+                        angleA = 180;
+                    }
+                    if (isNaN(angleA)) {
+                        angleA = 0;
+                    }
+
+                    this.colorAngle = angleA;
+                    this.x = this.centerX - Math.sin( this.angle )*this.radius;
+                    this.y = this.centerY + Math.cos( this.angle )*this.radius;
+                    this.angle += this.speed;
+
+                }
+            });
+        }
+        var count = 100;
+        while ( count-- ){
+            createOrb( w/2,h/2+ count*2);
+        }
+
+        console.log( orbs )
+        var loop = function () {
+            requestAnimationFrame(loop);
+            if( oTrailTF ){
+                cxt.fillStyle = 'rgba(0,0,0,0.1)';
+                cxt.fillRect(0,0,w,h);
+            }else {
+                cxt.clearRect(0,0,w,h)
+            }
+            var i = orbs.length;
+            while ( i-- ){
+                var n =10;
+                var a = orbs[i];
+                while (n--){
+                    a.updata();
+                    a.draw();
+                }
+            }
+        }
+        loop();
+        
+        function fn(e) {  // down
+            var x = e.clientX - oC.offsetLeft;
+            var y = e.clientY - oC.offsetTop;
+            createOrb( x,y);
+        }
+        function fn1() { // move
+            oC.addEventListener('mousemove',fn);
+        }
+        function fn3() { // up
+            oC.removeEventListener('mousemove',fn);
+        }
+        oC.addEventListener('mousedown',fn);
+        oC.addEventListener('mousedown',fn1);
+        oC.addEventListener('mouseup',fn3);
+        oTrail.addEventListener('change',function () {
+            oTrailTF = oTrail.checked;
+        })
+        clear.addEventListener('click',function () {
+            orbs = [];
+        })
+    </script>
+</body>
+</html>

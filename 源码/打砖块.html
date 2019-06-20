@@ -1,0 +1,1420 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <style>
+  @import url("https://fonts.googleapis.com/css?family=Press+Start+2P");
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Press Start 2P', cursive;
+}
+
+body {
+  font-size: 62.5%;
+  background-color: rgba(17, 17, 17, 0.6);
+}
+
+.main {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.u-display-none {
+  visibility: hidden;
+}
+
+.main-menu {
+  color: #fff;
+  perspective: 120px;
+}
+.main-menu__header {
+  transform: rotateX(-25deg);
+  margin-top: 8rem;
+  margin-bottom: 5rem;
+  text-align: center;
+}
+.main-menu__primary-heading {
+  font-size: 4rem;
+}
+.main-menu__secondary-heading {
+  font-size: 2rem;
+}
+.main-menu__start {
+  margin-top: 5rem;
+  font-size: 1rem;
+  text-align: center;
+}
+.main-menu__group {
+  display: block;
+  text-align: center;
+}
+.main-menu__group--enemy {
+  display: inline-block;
+  width: 80px;
+  height: 40px;
+}
+.main-menu__group--points {
+  display: inline-block;
+  font-size: 1.5rem;
+  padding: 1rem 0;
+}
+
+.game-screen {
+  width: 1000px;
+  height: 750px;
+  background-color: #111;
+  transform: scale(1);
+}
+
+.game-ui {
+  margin-top: .5rem;
+  font-size: 1rem;
+}
+.game-ui__menu {
+  width: 1000px;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  color: white;
+}
+.game-ui__text {
+  display: inline-block;
+  margin-bottom: .5rem;
+}
+
+.game-over {
+  text-align: center;
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.game-over__text-group {
+  transform: translateY(-3rem);
+}
+.game-over__primary-header {
+  font-size: 3rem;
+  margin-bottom: 4rem;
+}
+.game-over__secondary-header {
+  font-size: 1rem;
+}
+
+.load-level {
+  color: #fff;
+  text-align: center;
+}
+.load-level__heading-primary {
+  margin-top: 20rem;
+  font-size: 2em;
+}
+.load-level__heading-secondary {
+  margin-top: 1rem;
+  font-size: 1.5em;
+}
+
+.position-component {
+  position: absolute;
+}
+
+.bullet-asset {
+  background-color: #fff;
+  box-shadow: 0px 0px 5px #fff;
+}
+
+.enemy-bullet-asset {
+  background-color: #ff0000;
+  box-shadow: 0px 0px 5px #ff0000;
+}
+
+.player-asset {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,  \a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 8" >\a 			<g id="player-ship">\a 				<polygon fill="#00ff00" points=" 0 8, 0 4,  1 4,  1 3, 5 3, 5 1, 6 1, 6 0, 7 0, 7 1, 8 1, 8 3, 12 3, 12 4, 13 4, 13 8 "></polygon>\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 5px #00ff00);
+}
+
+.player-asset.--explode,
+.enemy-asset.--explode,
+.boss-asset.--explode {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,  \a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" >\a 			<g id="explode">\a 				<polygon fill="#ff6900" points="1 1, 2 1, 2 2, 1 2"> </polygon>\a 				<polygon fill="#ff6900" points="2 2, 3 2, 3 3, 2 3"> </polygon>\a 				<polygon fill="#ff6900" points="3 3, 4 3, 4 4, 3 4"> </polygon>\a 				<polygon fill="#ff6900" points="4 0, 5 0, 5 2, 4 2"> </polygon>\a 				<polygon fill="#ff6900" points="7 4, 8 4, 8 5, 7 5"> </polygon>\a 				<polygon fill="#ff6900" points="8 2, 9 2, 9 4, 8 4"> </polygon>\a 				<polygon fill="#ff6900" points="9 5, 10 5, 10 6, 9 6"> </polygon>\a 				<polygon fill="#ff6900" points="10 4, 11 4, 11 5, 10 5"> </polygon>\a 				<polygon fill="#ff6900" points="9 7, 11 7, 11 8, 9 8"> </polygon>\a 				<polygon fill="#ff6900" points="8 9, 9 9, 9 10, 8 10"> </polygon>\a 				<polygon fill="#ff6900" points="7 8, 8 8, 8 9, 7 9"> </polygon>\a 				<polygon fill="#ff6900" points="6 7, 7 7, 7 8, 6 8"> </polygon>\a 				<polygon fill="#ff6900" points="5 9, 6 9, 6 11, 5 11"> </polygon>\a 				<polygon fill="#ff6900" points="3 6, 4 6, 4 7, 3 7"> </polygon>\a 				<polygon fill="#ff6900" points="2 7, 3 7, 3 9, 2 9"> </polygon>\a 				<polygon fill="#ff6900" points="0 6, 1 6, 1 7, 0 7"> </polygon>\a 				<polygon fill="#ff6900" points="1 5, 2 5, 2 6, 1 6"> </polygon>\a 			</g>\a 		</svg>\a 	') !important;
+  filter: drop-shadow(0px 0px 5px #ff6900) !important;
+}
+
+.enemy-asset {
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.--type-2.--frame-0 {
+  background-image: url('data:image/svg+xml;utf8,\a 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">\a 		<defs>\a 			<filter id="shadow">\a 			  <feDropShadow dx="4" dy="8" stdDeviation="4"/>\a 			</filter>\a 		</defs>	\a 		<g id="enemy-type-2-frame-0" style="filter:url(#shadow);">\a 			<polygon fill="#ffff00"\a 				points="0 3, 1 3, 1 2, 2 2, 2 1, 3 1, 3 0, 5 0, 5 1, 6 1, 6 2, 7 2, 7 3, 8 3, 8 5, 7 5, 7 6, 6 6, 6 5, 5 5, 5 6, 3 6, 3 5, 2 5, 2 6, 1 6, 1 5, 0 5">\a \a 			</polygon>\a 			<polygon style="fill:#000; filter:url(#shadow);"\a 				points="2 3, 3 3, 3 4, 2 4">\a 			</polygon>\a 			<polygon fill="#111"\a 				points="5 3, 6 3, 6 4, 5 4">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="0 6, 1 6, 1 7, 0 7">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="7 6, 8 6, 8 7, 7 7">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="1 7, 2 7, 2 8, 1 8">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="6 7, 7 7, 7 8, 6 8">\a 			</polygon>\a 		</g>\a 	</svg>\a 	');
+  filter: drop-shadow(0px 0px 5px #ffff00);
+}
+
+.--type-2.--frame-1 {
+  background-image: url('data:image/svg+xml;utf8,\a 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">\a 		<g id="enemy-type-2-frame-1">	\a 			<polygon fill="#ffff00"\a 				points="0 3, 1 3, 1 2, 2 2, 2 1, 3 1, 3 0, 5 0, 5 1, 6 1, 6 2, 7 2, 7 3, 8 3, 8 5, 6 5, 6 6, 5 6, 5 5, 5 5, 3 5, 3 5, 3 6, 2 6, 2 5, 0 5">\a \a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="3 6, 5 6, 5 7, 3 7">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="1 6, 2 6, 2 7, 1 7">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="6 6, 7 6, 7 7, 6 7">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="0 7, 1 7, 1 8, 0 8">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="7 7, 8 7, 8 8, 7 8">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="2 7, 3 7, 3 8, 2 8">\a 			</polygon>\a 			<polygon fill="#ffff00"\a 				points="5 7, 6 7, 6 8, 5 8">\a 			</polygon>\a 			<polygon fill="#111"\a 				points="2 3, 3 3, 3 4, 2 4">\a 			</polygon>\a 			<polygon fill="#111"\a 				points="5 3, 6 3, 6 4, 5 4">\a 			</polygon>\a 		</g>\a 	</svg>\a 	');
+  filter: drop-shadow(0px 0px 5px #ffff00);
+}
+
+.--type-1.--frame-0 {
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 9">\a 			<g id="enemy-type-1-frame-0">\a 		<polygon fill="#ff00ff"\a 					points="0 1, 1 1, 1 3, 2 3, 2 2, 3 2, 3 1, 4 1, 4 2, 7 2, 7 1, 8 1, 8 2, 9 2, 9 3, 10 3, 10 1, 11 1, 11 5, 10 5, 10 6, 9 6, 9 7, 8 7, 8 6, 3 6, 3 7, 2 7, 2 6, 1 6, 1 5, 0 5">\a 				</polygon>\a 		\a 				<polygon fill="#111"\a 					points="3 3, 4 3, 4 4, 3 4">\a 				</polygon>\a 		\a 				<polygon fill="#111"\a 					points="7 3, 8 3, 8 4, 7 4">\a 				</polygon>\a 		\a 		<polygon fill="#ff00ff"\a 					points="2 0, 3 0, 3 1, 2 1">\a 				</polygon>\a 		\a 		<polygon fill="#ff00ff"\a 					points="8 0, 9 0, 9 1, 8 1">\a 				</polygon>\a 		\a 		<polygon fill="#ff00ff"\a 					points="1 7, 2 7, 2 8, 1 8">\a 				</polygon>\a 		\a 		<polygon fill="#ff00ff"\a 					points="9 7, 10 7, 10 8, 9 8">\a 				</polygon>\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 5px #ff00ff);
+}
+
+.--type-1.--frame-1 {
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 9">\a 			<g id="enemy-type-1-frame-0">\a 				<polygon fill="#ff00ff"\a 					points="0 7, 0 4, 1 4, 1 3, 2 3, 2 2, 3 2, 3 1, 4 1, 4 2, 7 2, 7 1, 8 1, 8 2, 9 2, 9 3, 10 3, 10 4, 11 4, 11 7, 10 7, 10 5, 9 5, 9 7, 8 7, 8 6, 3 6, 3 7, 2 7, 2 5, 1 5, 1 7">\a 				</polygon>\a 		\a 				<polygon fill="#111"\a 					points="3 3, 4 3, 4 4, 3 4">\a 				</polygon>\a 		\a 				<polygon fill="#111"\a 					points="7 3, 8 3, 8 4, 7 4">\a 				</polygon>\a 		\a 				<polygon fill="#ff00ff"\a 					points="2 0, 3 0, 3 1, 2 1">\a 				</polygon>\a 		\a 				<polygon fill="#ff00ff"\a 					points="8 0, 9 0, 9 1, 8 1">\a 				</polygon>\a 		\a 				<polygon fill="#ff00ff"\a 					points="3 7, 5 7, 5 8, 3 8">\a 				</polygon>\a 		\a 				<polygon fill="#ff00ff"\a 					points="6 7, 8 7, 8 8, 6 8">\a 				</polygon>\a 				\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 5px #ff00ff);
+}
+
+.--type-0.--frame-0 {
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9">\a 			<g id="enemy-type-2">\a 				<polygon fill="#00ffff"\a 					points="0 2, 1 2, 1 1, 4 1, 4 0, 8 0, 8 1, 11 1, 11 2, 12 2, 12 5, 9 5, 9 6, 10 6, 10 7, 8 7, 8 6, 7 6, 7 5, 5 5, 5 6, 4 6, 4 7, 2 7, 2 6, 3 6, 3 5, 0 5">\a 				</polygon>\a 				<polygon fill="#00ffff"\a 					points="0 8, 0 7, 2 7, 2 8">\a 				</polygon>\a 		\a 				<polygon fill="#00ffff"\a 					points="10 8, 10 7, 12 7, 12 8">\a 				</polygon>\a 		\a 				<polygon fill="#111" \a 					points="3 3, 5 3, 5 4, 3 4">\a 				</polygon>\a 		\a 				<polygon fill="#111" \a 					points="7 3, 9 3, 9 4, 7 4">\a 				</polygon>\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 5px #00ffff);
+}
+
+.--type-0.--frame-1 {
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 9">\a 			<g id="enemy-type-2">\a 				<polygon fill="#00ffff"\a 					points="0 2, 1 2, 1 1, 4 1, 4 0, 8 0, 8 1, 11 1, 11 2, 12 2, 12 5, 10 5, 10 6, 11 6, 11 7, 10 7, 10 8, 8 8, 8 7, 9 7, 9 6, 7 6, 7 5, 5 5, 5 6, 3 6, 3 7, 4 7, 4 8, 2 8, 2 7, 1 7, 1 6, 2 6, 2 5, 0 5">\a 				</polygon>\a 				<polygon fill="#111" \a 					points="3 3, 5 3, 5 4, 3 4">\a 				</polygon>\a 		\a 				<polygon fill="#111" \a 					points="7 3, 9 3, 9 4, 7 4">\a 				</polygon>\a 		\a 				<polygon fill="#00ffff"\a 					points="5 6, 7 6, 7 7, 5 7">\a 				</polygon>\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 5px #00ffff);
+}
+
+.obstacle-asset-full-0 {
+  background-color: #fff;
+  box-shadow: 0px 0px 5px #fff;
+}
+
+.obstacle--broke {
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10">\a 			<g id="enemy-type-2">	\a 			</g>\a 		</svg>\a 		');
+}
+
+.obstacle-asset-destroy {
+  visibility: hidden;
+}
+
+.boss-asset {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url('data:image/svg+xml;utf8,\a 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 7">\a 			<g id="enemy-type-2">\a 				<polygon fill="#ff0000"\a 					points="0 4, 1 4, 1 3, 2 3, 2 2, 3 2, 3 1, 5 1, 5 0, 9 0, 9 1, 11 1, 11 2, 12 2, 12 3 ,13 3, 13 4, 14 4, 14 5, 12 5, 12 6, 11 6, 11 7, 10 7, 10 6, 9 6, 9 5, 8 5, 8 6, 6 6, 6 5, 5 5, 5 6, 4 6, 4 7, 3 7, 3 6, 2 6, 2 5, 0 5 ">\a 				</polygon>\a 		\a 				<polygon fill="#111"\a 					points="3 3, 4 3, 4 4, 3 4">\a 				</polygon>\a 				<polygon fill="#111"\a 					points="5 3, 6 3, 6 4, 5 4">\a 				</polygon>\a 				<polygon fill="#111"\a 					points="8 3, 9 3, 9 4, 8 4">\a 				</polygon>\a 				<polygon fill="#111"\a 					points="10 3, 11 3, 11 4, 10 4">\a 				</polygon>\a 			</g>\a 		</svg>\a 		');
+  filter: drop-shadow(0px 0px 8px #ff0000);
+}
+
+  </style>
+ </HEAD>
+
+ <BODY>
+  <main class="main">
+	<div id="game-screen" class="game-screen"></div>
+</main>
+<script>
+/* 
+
+0. Constants
+1. Engine
+	1.1 Engine Object (game loop),
+	1.2 Entity Compoent System,
+		1.1.1 Entity,
+		1.1.2 ECS,
+	1.3 Input Manager,
+	1.4 Scene Manager
+2. Game
+	2.1 Components,
+	2.2 Systems,
+	2.3 Entities,
+	2.4 Game Scene
+	
+#TODO: 
+	Scale, normal, reload wait.
+	
+*/
+
+console.clear();
+
+// 0. Constants
+
+const COMPONENTS = {
+	PLAYER: 'PLAYER_COMPONENT',
+	POSITION: 'POSITION_COMPONENT',
+	APPERANCE: 'APPERANCE_COMPONENT',
+	ENEMY: 'ENEMY_COMPONENT',
+	PHYSICS: 'PHYSICS_COMPONENT',
+	NODE: 'NODE_COMPONENT',
+	BULLET: 'BULLET_COMPONENT',
+	COLLISION: 'COLLISION_COMPONENT',
+	OBSTACLE: 'OBSTACLE_COMPONENT',
+	LEVEL: 'LEVEL_COMPONENT',
+	EXPLODE: 'EXPLODE_COMPONENT',
+	BOSS: 'BOSS_COMPONENT'
+};
+
+const COLLISION_MASKS = {
+	NO: 0b00000,	
+	WORLD: 0b00001,
+	BULLET: 0b00010,
+	PLAYER: 0b00100,
+	ENEMY: 0b01000,
+	OBSTACLE: 0b10000
+};
+
+const SCREEN_WIDTH = 1000;
+const SCREEN_HEIGHT = 750;
+
+const ENEMY_ROWS = 5;
+const ENEMY_COLS = 8;
+
+const OBSTACLE_WIDTH = 10;
+const OBSTACLE_ROWS = 7;
+const OBSTACLE_COLS = 10;
+
+const PLAYER_X_SPEED = 5;
+
+const obstacleMap =  [
+	0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
+	0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 
+	1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 
+	];
+
+
+const GAME_SCREEEN_ELEMENT = document.querySelector('#game-screen');
+
+let SPEED_FACTOR = 1;
+
+// 1. Engine
+// 1.1 Engine Object (game loop)
+
+
+const kt = {};
+
+kt.Engine = {
+	init() {
+		this.running = true;
+		kt.Engine.InputManager.init('#game-screen');
+		this.gameLoop();
+	},
+	gameLoop() {
+		var hardBind = this.gameLoop.bind(this);
+		window.requestAnimationFrame(hardBind);
+		kt.Engine.SceneManager.tick();
+	}
+}
+
+// 1.2 ENTITY COMPONENT SYSTEM:
+
+// 1.2.1 ENTITY
+
+kt.Engine.Entity = function(name) {
+    this.id = (Math.random() * 10000000).toString(16);
+	this.name = name;
+    this.components = {};
+    return this;
+};
+
+kt.Engine.Entity.prototype.addComponent = function(component) {
+    if(!component.name) throw new Error('Component has to have a name!');
+    this.components[component.name] = component;
+    return this;
+};
+
+kt.Engine.Entity.prototype.removeComponent = function(componentName) {
+    var name = componentName;
+    if(typeof componentName === 'function'){ name = componentName.name; }
+    delete this.components[name];
+    return this;
+};
+
+kt.Engine.Entity.prototype.print = function() {
+    console.log(JSON.stringify(this, null, 4));
+    return this;
+};
+
+// 1.2.2 Entity component system
+
+kt.Engine.EntityComponentSystem = function(entities = [], systems = []){
+    this.Entities = entities;
+    this.Systems = systems;
+
+    this.update = function(){
+        if(!this.Systems) { return; }
+        this.Systems.forEach(system => { system.tick(this.Entities); });
+    }
+
+    this.destroy = function() {
+        this.Systems = [];
+        this.Entities = [];
+    }
+}
+
+kt.Engine.EntityComponentSystem.prototype.addEntities = function(entities){
+    this.Entities = this.Entities.concat(entities);
+};
+
+kt.Engine.EntityComponentSystem.prototype.addSystems = function(systems){
+    systems.forEach(system => {
+        if(system.init) system.init(this.Entities);
+    });
+    this.Systems = this.Systems.concat(systems);
+};
+
+// 1.3 Input manager
+kt.Engine.InputManager = {
+    update: function() {
+        let i;
+        for(i = 8; i < 222; i++){
+            if(!this.keys[i].isDown) continue;
+			this.keys[i].prevIsDown = this.keys[i].isDown;
+		}
+	},
+	init: function(selector) {
+        this.keys = [];
+         
+        for (let i = 8; i < 222; i++){
+            this.keys[i] = {
+                isDown: false,
+                isPressed: () => this.keys[i].isDown && !this.keys[i].prevIsDown
+            };
+        }
+
+        window.addEventListener('keydown', (event) => {
+			event.preventDefault();
+            this.keys[event.which].isDown = true;
+        });
+
+        window.addEventListener('keyup', (event) => {
+			event.preventDefault();
+            this.keys[event.which].isDown = false;
+            this.keys[event.which].prevIsDown = false;
+        });
+	}
+}
+
+// 1.4 Scene manager 
+kt.Engine.Scene = function(config){
+    this.name = config.name;
+    this.init = config.init;
+    this.destroy = config.destroy;
+    this.update = config.update;
+
+    kt.Engine.SceneManager._scenes[this.name] = this;
+};
+
+kt.Engine.SceneManager = {
+    _scenes: {},
+    scenesStack: [],
+    pushScene(sceneName, payload){
+        let scene = this._scenes[sceneName];
+        if(scene.init) { scene.init(payload); }
+        this.scenesStack.push(scene);
+    },
+    popScene(){
+        this.scenesStack[this.scenesStack.length - 1].destroy();
+        this.scenesStack.pop();
+    },
+    changeScene(sceneName, payload){
+        this.popScene();
+        this.pushScene(sceneName, payload);
+    },
+    tick(){
+        let currentScene = this.scenesStack[this.scenesStack.length - 1];
+        currentScene.update();
+    }
+};
+
+// 2 GAME
+
+// 2.1 Components
+
+let PositionComponent = function(x = 0, y = 0, width = 0, height = 0, visible = false) {
+	return {
+		name: COMPONENTS.POSITION,
+		x, y, width, height, visible
+	};
+}
+
+let ApperanceComponent = function(assetClass, totalFrames = 1) {
+	return {
+		name: COMPONENTS.APPERANCE,
+		frame: 0,
+		totalFrames, assetClass
+	};
+}
+
+let PhysicsComponent = function(vx = 0, vy = 0, ax = 0, ay = 0) {
+	return {
+		name: COMPONENTS.PHYSICS,
+		vx, vy, ax, ay 
+	};
+}
+
+let CollisionComponent = function(collisionId = COLLISION_MASKS.NO, collisionMask = COLLISION_MASKS.NO) {
+	return {
+		name: COMPONENTS.COLLISION,
+		collisions: [],
+		collisionId,
+		collisionMask,
+	};	
+}
+
+let EnemyComponent = function(directionX, type) {
+	return {
+		name: COMPONENTS.ENEMY,
+		live: true,
+		directionX,
+		type,
+	};
+}
+
+let PlayerComponent = function(lives = 3) {
+	return {
+		name: COMPONENTS.PLAYER,
+		live: true,
+		lives,
+		explode: false,
+		timer: 0,
+		explodeTimer: 2
+	};
+}
+
+let LevelComponent = function(score = 0) {
+	return {
+		name: COMPONENTS.LEVEL,
+		score
+	};
+}
+
+let BulletComponent = function(isPlayerBullet) {
+	return {
+		name: COMPONENTS.BULLET,
+		isPlayerBullet,
+		hit: true,
+	};
+}
+
+let NodeComponent = function(domNode) {
+	return {
+		name: COMPONENTS.NODE,
+		domNode
+	};
+}
+
+let ObstacleComponent = function(group, type) {
+	return {
+		name: COMPONENTS.OBSTACLE,
+		lives: 1,
+		group,
+		type
+	};
+}
+
+let ExplodeComponent = function() {
+	return {
+		name: COMPONENTS.EXPLODE,
+		explode: false,
+		explodeTimer: 0,
+		explodeTime: 50
+	};
+}
+
+let BossComponent = function() {
+	return {
+		name: COMPONENTS.BOSS,
+		bossTimer: 0,
+		bossTime: 600,
+		bossSpawned: false,
+		bossSpawnTimes: 0,
+		bossMaxSpawnTimes: 2,
+		bossMinNumberOfEnemiesSpawn: 15,
+		bossSpawnCooldown: 500,
+	};
+}
+
+// 2.2 Systems
+
+const RenderSystem = {
+	init(entities) {
+		entities
+			.filter(entity => entity.components[COMPONENTS.POSITION] && entity.components[COMPONENTS.NODE])
+			.map(entity => {
+				var newElement = document.createElement('div');	
+				newElement.classList.add('position-component');	
+			
+				newElement.style.top = `${entity.components[COMPONENTS.POSITION].y}px`;
+				newElement.style.left = `${entity.components[COMPONENTS.POSITION].x}px`;
+				newElement.style.width = `${entity.components[COMPONENTS.POSITION].width}px`;
+				newElement.style.height = `${entity.components[COMPONENTS.POSITION].height}px`;
+			
+				var apperanceComponent = entity.components[COMPONENTS.APPERANCE];
+				if(apperanceComponent) {
+					newElement.classList.add(apperanceComponent.assetClass);
+				}	
+			
+				entity.components[COMPONENTS.NODE].domNode = newElement;
+				
+				GAME_SCREEEN_ELEMENT.appendChild(newElement);
+			});
+		
+	},
+	tick(entities) {
+		entities
+			.filter(entity => 
+							entity.components[COMPONENTS.POSITION] &&
+							entity.components[COMPONENTS.NODE] &&
+				   			entity.components[COMPONENTS.APPERANCE ])
+			.map(entity => {
+				let domElement = entity.components[COMPONENTS.NODE].domNode;
+				let position = entity.components[COMPONENTS.POSITION];
+			
+				domElement.style.display = position.visible ? 'block' : 'none';
+				
+				domElement.style.left = `${position.x}px`;
+				domElement.style.top = `${position.y}px`;
+			});
+	}
+};
+
+const PhysicsSystem = {
+	init(){},
+	tick(entities) {
+			entities
+				.filter(entity => entity.components[COMPONENTS.PHYSICS] && entity.components[COMPONENTS.POSITION].visible)
+				.map(entity => {
+					let position = entity.components[COMPONENTS.POSITION];	
+					let physics = entity.components[COMPONENTS.PHYSICS];	
+					let enemy = entity.components[COMPONENTS.ENEMY];
+				
+					position.x += physics.vx;
+					position.y += physics.vy;
+				});
+	}
+}
+
+const ControllSystem = {
+	init(){},
+	tick(entities) {
+		let playerEntity = entities.find(entity => entity.components[COMPONENTS.PLAYER]);
+		
+		playerEntity.components[COMPONENTS.PHYSICS].vx = 0;
+		
+		if(playerEntity.components[COMPONENTS.EXPLODE].explodeTimerStarted){
+			return;
+		}
+		
+		if(kt.Engine.InputManager.keys[37].isDown) {
+			let position = playerEntity.components[COMPONENTS.PHYSICS];
+			position.vx -= PLAYER_X_SPEED * SPEED_FACTOR;
+		}
+		
+		if(kt.Engine.InputManager.keys[39].isDown) {
+			let position = playerEntity.components[COMPONENTS.PHYSICS];
+			position.vx += PLAYER_X_SPEED * SPEED_FACTOR;
+		}
+		
+		if(kt.Engine.InputManager.keys[32].isPressed()) {
+			let playerPosition = entities.find(entity => entity.components[COMPONENTS.PLAYER]).components[COMPONENTS.POSITION];
+			let bulletEntity = entities.find(entity => entity.components[COMPONENTS.BULLET]);	
+			
+			let bullet = bulletEntity.components[COMPONENTS.BULLET];
+			
+			if(bullet.hit) {
+				bullet.hit = false;
+				bulletEntity.components[COMPONENTS.POSITION].visible = true;
+				bulletEntity.components[COMPONENTS.POSITION].y = 720;
+				bulletEntity.components[COMPONENTS.PHYSICS].vy = -10 * SPEED_FACTOR;
+				bulletEntity.components[COMPONENTS.POSITION].x = 
+					playerPosition.x + 
+					playerPosition.width / 2 - 
+					bulletEntity.components[COMPONENTS.POSITION].width / 2;
+			}
+		}
+	}
+};
+
+const EnemySystem = {
+	init(entities){
+		this.timer = 0;
+		
+		entities
+			.filter(entity => entity.components[COMPONENTS.ENEMY])	
+			.map(enemy => {
+				let node = enemy.components[COMPONENTS.NODE].domNode;
+				let enemyComponent = enemy.components[COMPONENTS.ENEMY];
+			
+				node.classList.add(`--type-${enemyComponent.type}`);
+			});
+	},
+	tick(entities) {
+		this.timer++;
+		
+		let enemies = entities.filter(entity => entity.components[COMPONENTS.ENEMY] && entity.components[COMPONENTS.ENEMY].type !== 3);
+		let visibleEnemies = enemies.filter(entity => entity.components[COMPONENTS.POSITION].visible);
+		
+		SPEED_FACTOR = 1 + (40 - visibleEnemies.length) / 40;
+		
+		enemies
+			.filter(entity => entity.components[COMPONENTS.ENEMY])
+			.map(entity => {
+				let physics = entity.components[COMPONENTS.PHYSICS];
+				let enemy = entity.components[COMPONENTS.ENEMY];
+			});
+		
+		let enemyBullets =  
+			entities
+			.filter(entity => 
+				entity.components[COMPONENTS.BULLET] &&
+				!entity.components[COMPONENTS.BULLET].isPlayerBullet &&
+				entity.components[COMPONENTS.BULLET].hit 
+			);
+		
+		if((enemyBullets.length && (Math.random() * 100) + 1 > 99.9) || enemyBullets.length === 3) {
+			let livingEnemies = enemies.filter(enemy => enemy.components[COMPONENTS.ENEMY].live)
+			
+			let enemyIndex = Math.round((Math.random() * livingEnemies.length));
+			let shootingEnemy = livingEnemies[enemyIndex];
+			
+			if(!shootingEnemy) { return; } // #FIXME - this isonly temporary fix.
+			
+			let bulletPosition = enemyBullets[0].components[COMPONENTS.POSITION];
+			let enemyPosition = shootingEnemy.components[COMPONENTS.POSITION];
+			
+			bulletPosition.visible = true;
+			bulletPosition.x = enemyPosition.x + enemyPosition.width + (Math.random() * enemyPosition.width / 2 - enemyPosition.width);
+			bulletPosition.y = enemyPosition.y;
+			enemyBullets[0].components[COMPONENTS.BULLET].hit = false;
+			enemyBullets[0].components[COMPONENTS.PHYSICS].vy = 5 * SPEED_FACTOR;
+		}
+		
+		enemies.map(enemy => {
+				enemy.components[COMPONENTS.PHYSICS].vx = 0;
+			});
+		
+		if(this.timer > 200 / (SPEED_FACTOR * 5))  {
+			this.timer = 0;
+			enemies.map(enemy => {
+				enemy.components[COMPONENTS.APPERANCE].frame += 1;
+				enemy.components[COMPONENTS.PHYSICS].vx = enemy.components[COMPONENTS.ENEMY].directionX;
+			});
+		}
+	}	
+};
+
+const CollisionSystem = {
+	init(entities) {
+		let collisionEntities = entities.filter(entity => entity.components[COMPONENTS.COLLISION]);
+		collisionEntities.map(entity => {
+			let collisionComponent = entity.components[COMPONENTS.COLLISION];
+			let physicsComponent = entity.components[COMPONENTS.PHYSICS];
+
+			collisionEntities.map(innerEntity => {
+				if(entity.id === innerEntity.id) {
+					return;
+				}
+
+				let innerEntityCollision = innerEntity.components[COMPONENTS.COLLISION];
+
+				let canCollide = innerEntityCollision.collisionId & collisionComponent.collisionMask;
+				if(canCollide) {
+					collisionComponent.collisions.push({
+						entity: innerEntity,
+						mask: canCollide,
+						checked: false
+					});
+					
+				}	
+
+			});
+		});
+	},
+	tick(entities) {
+		entities
+			.filter(entity => entity.components[COMPONENTS.COLLISION])
+			.map(entity => {
+				let collisionComponent = entity.components[COMPONENTS.COLLISION];
+				if(!entity.components[COMPONENTS.POSITION].visible || 
+				   (entity.components[COMPONENTS.EXPLODE] && entity.components[COMPONENTS.EXPLODE].explodeTimerStarted)) {
+					return;
+				}
+				
+				collisionComponent
+					.collisions
+					.map(collision => {
+						switch(collision.mask) {
+							case COLLISION_MASKS.WORLD:
+								this.handleCollisionWithWorld(entity, collision, entities);
+								break;
+							case COLLISION_MASKS.BULLET:
+								this.handleCollisionWithBullet(entity, collision, entities);
+								break;
+							case COLLISION_MASKS.ENEMY: 
+								this.handleCollisionWithEnemy(entity, collision, entities);
+						}
+					});
+			});
+	},
+	
+	handleCollisionWithWorld(entity, collision, entities) {
+		let collideX = false;
+		let collideY = false;
+		let worldBounds = collision.entity.components[COMPONENTS.POSITION];
+		let entityPosition = entity.components[COMPONENTS.POSITION];
+		let entityPhysics = entity.components[COMPONENTS.PHYSICS];
+		
+		// Check if entity collides with world.
+		if(entityPosition.x < worldBounds.x || entityPosition.x + entityPosition.width > worldBounds.width) {
+			collideX = true;
+		}
+		
+		if(entityPosition.y < worldBounds.y || entityPosition.y + entityPosition.height > worldBounds.height) {
+			collideY = true;
+		}
+		
+		if(!collideX && !collideY) {
+			return false; // no collision detected
+		}
+		
+		// Player - world collision,
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.PLAYER) {
+			if(collideX) {
+				entityPosition.x -= entityPhysics.vx * SPEED_FACTOR;
+			}
+			
+			if(collideY) {
+				entityPosition.y -= entityPhysics.vy * SPEED_FACTOR;
+			}
+		}
+		
+		// Enemy - world collision,	
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.ENEMY) {
+			if(collideX) {
+				
+				if(entity.components[COMPONENTS.BOSS]) {
+					entity.components[COMPONENTS.PHYSICS].vx *= -1;
+					return;
+				}		
+				
+				entities
+					.filter(innerEntity => innerEntity.components[COMPONENTS.ENEMY] && !innerEntity.components[COMPONENTS.BOSS])
+					.map(enemyEntity => {
+						enemyEntity.components[COMPONENTS.POSITION].x -= enemyEntity.components[COMPONENTS.ENEMY].directionX * 2;	
+						enemyEntity.components[COMPONENTS.ENEMY].directionX *= -1;
+						enemyEntity.components[COMPONENTS.POSITION].y += 20;
+				});
+			}
+		}
+		
+		// Bullet - world collision,
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.BULLET) {
+			entity.components[COMPONENTS.BULLET].hit = true;
+			entity.components[COMPONENTS.POSITION].visible = false;
+			entity.components[COMPONENTS.POSITION].y = -250;	
+		}
+		
+		return true;
+				
+	},
+	handleCollisionWithBullet(entity, collision, entities) {
+		let collide = false;
+		
+		let bulletPosition = collision.entity.components[COMPONENTS.POSITION];
+		let entityPosition = entity.components[COMPONENTS.POSITION];
+		let levelEntity = entities.find(entity => entity.components[COMPONENTS.LEVEL]);
+		
+		if(bulletPosition.x < entityPosition.x + entityPosition.width && 
+		   bulletPosition.x + bulletPosition.width > entityPosition.x &&
+		   bulletPosition.y < entityPosition.y + entityPosition.height && 
+		   bulletPosition.y + bulletPosition.height > entityPosition.y) {
+			collide = true;
+		}
+		
+		if(!collide) {
+			return;
+		}
+			
+		// Enemy - player bullet collision
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.ENEMY && collision.entity.components[COMPONENTS.BULLET].isPlayerBullet) {
+			if(entity.components[COMPONENTS.PLAYER]) {
+				collision.entity.components[COMPONENTS.BULLET].hit = false;
+			} else {
+				collision.entity.components[COMPONENTS.BULLET].hit = true;
+				/* move to bullet and enemy systems */
+				collision.entity.components[COMPONENTS.POSITION].visible = false;
+				collision.entity.components[COMPONENTS.POSITION].x = -20;
+				collision.entity.components[COMPONENTS.POSITION].y = -20;
+				
+				/* applyScore */
+				if(entity.components[COMPONENTS.ENEMY]){
+					levelEntity.components[COMPONENTS.LEVEL].score += 100 * (entity.components[COMPONENTS.ENEMY].type + 1);
+
+					entity.components[COMPONENTS.EXPLODE].explode = true;
+					entity.components[COMPONENTS.ENEMY].live = false;
+				} else {
+					levelEntity.components[COMPONENTS.LEVEL].score += 500;	
+					entity.components[COMPONENTS.EXPLODE].explode = true;
+				}
+			} 
+		}
+		
+		// player - bullet collision
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.PLAYER && !collision.entity.components[COMPONENTS.BULLET].isPlayerBullet) {
+			collision.entity.components[COMPONENTS.BULLET].hit = true;
+			collision.entity.components[COMPONENTS.POSITION].visible = false;
+			collision.entity.components[COMPONENTS.POSITION].x = -40;
+			collision.entity.components[COMPONENTS.POSITION].y = -40;
+			entity.components[COMPONENTS.EXPLODE].explode = true;
+		}
+		
+		// obstacle - bullet collision
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.OBSTACLE && entity.components[COMPONENTS.OBSTACLE].lives > 0) {
+			collision.entity.components[COMPONENTS.BULLET].hit = true;
+			collision.entity.components[COMPONENTS.POSITION].visible = false;
+			collision.entity.components[COMPONENTS.POSITION].x = -40;
+			collision.entity.components[COMPONENTS.POSITION].y = -40;
+			entity.components[COMPONENTS.OBSTACLE].hit = true;
+		}
+	},
+	handleCollisionWithEnemy(entity, collision, entities) {
+		let collide = false;		
+		let enemyPosition = collision.entity.components[COMPONENTS.POSITION];
+		let entityPosition = entity.components[COMPONENTS.POSITION];
+		
+		if(enemyPosition.x < entityPosition.x + entityPosition.width && 
+		   enemyPosition.x + enemyPosition.width > entityPosition.x &&
+		   enemyPosition.y < entityPosition.y + entityPosition.height && 
+		   enemyPosition.y + enemyPosition.height > entityPosition.y) {
+			collide = true;
+		}
+		
+		if(!collide) {
+			return;
+		}
+		
+		
+		let playerEntity = entities.find(entity => entity.components[COMPONENTS.PLAYER]);
+		
+		if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.OBSTACLE &&  entity.components[COMPONENTS.OBSTACLE].lives > 0) {
+			playerEntity.components[COMPONENTS.PLAYER].lives = 0;	
+		}
+	}
+}
+
+const AnimationSystem = {
+	init() { },
+	tick(entities) {
+		let animationEntities = entities.filter(entity => entity.components[COMPONENTS.APPERANCE]);
+		animationEntities
+			.map(animationEntity => {
+				let frame = animationEntity.components[COMPONENTS.APPERANCE].frame;
+				let totalFrames = animationEntity.components[COMPONENTS.APPERANCE].totalFrames;
+			
+				animationEntity.components[COMPONENTS.APPERANCE].frame = frame % totalFrames;
+			
+				if(animationEntity.components[COMPONENTS.ENEMY]) {
+					let node = animationEntity.components[COMPONENTS.NODE].domNode;
+					let prevFrame = frame - 1 < 0 ? totalFrames - 1 : frame;
+					node.classList.remove(`--frame-${prevFrame}`);
+					node.classList.add(`--frame-${frame}`);
+				}
+			});
+	}
+}
+
+const ObstacleSystem = {
+	init(entities){
+		entities
+			.filter(entity => entity.components[COMPONENTS.OBSTACLE])
+			.map(obstacle => {
+				let nodeComponent = obstacle.components[COMPONENTS.NODE].domNode;	
+				let obstacleComponent = obstacle.components[COMPONENTS.OBSTACLE];
+			
+				nodeComponent.classList.add(`obstacle-asset-full-${obstacleComponent.type}`);
+			});
+	},
+	tick(entities){
+		let obstacles = entities.filter(entity => entity.components[COMPONENTS.OBSTACLE]);
+		
+		obstacles
+			.map(entity => {
+				let obstacleComponent = entity.components[COMPONENTS.OBSTACLE];
+				let nodeComponent = entity.components[COMPONENTS.NODE].domNode;
+			
+				if(obstacleComponent.hit) {
+					nodeComponent.classList.remove('obstacle-asset-full');
+					nodeComponent.classList.add('obstacle-asset-destroy');
+					
+					obstacleComponent.lives--;
+					obstacleComponent.hit = false;
+					
+					let siblingObstacles = obstacles.filter(obstacle =>  obstacle.components[COMPONENTS.OBSTACLE].group === obstacleComponent.group );
+					
+					siblingObstacles.map(siblingObstacle => {
+						for (let i = -1; i < 2; i++) {
+							for (let j = -1; j < 2; j++) {
+								if(i === j || i === -1 && j === 1 || i === 1 && j === -1) {
+									continue;
+								}
+								this.breakSiblingObstacle({x: i, y: j}, siblingObstacle, entity);
+							}
+						}
+					});
+				}
+					
+			});
+	},	
+	breakSiblingObstacle(coords, siblingObstacle, hitObstacle) {
+		let xFound, yFound;
+		let siblingObstaclePosition = siblingObstacle.components[COMPONENTS.POSITION];
+		let hitObstaclePosition = hitObstacle.components[COMPONENTS.POSITION];
+	
+		xFound = siblingObstaclePosition.x === hitObstaclePosition.x + hitObstaclePosition.width * coords.x;
+		yFound = siblingObstaclePosition.y === hitObstaclePosition.y + hitObstaclePosition.height * coords.y;
+		
+		if(xFound && yFound && siblingObstacle.components[COMPONENTS.OBSTACLE].lives > 0) {
+			siblingObstacle.components[COMPONENTS.NODE].domNode.classList.add('obstacle-asset-destroy');
+			siblingObstacle.components[COMPONENTS.OBSTACLE].lives--;
+			return true;
+		}
+	}
+}
+
+const ExplodeSystem = {
+	init(){},
+	tick(entities) {
+		entities
+			.filter(entity => entity.components[COMPONENTS.EXPLODE])
+			.map(entity => {
+			
+			let explodeComponent = entity.components[COMPONENTS.EXPLODE];
+			
+			if(explodeComponent.explode) {
+				explodeComponent.explode = false;
+				explodeComponent.explodeTimerStarted = true;
+				entity.components[COMPONENTS.NODE].domNode.classList.add('--explode');
+				entity.components[COMPONENTS.PHYSICS].vx = 0;
+			}
+
+			if(explodeComponent.explodeTimer > explodeComponent.explodeTime && explodeComponent.explodeTimerStarted) {
+
+				// player explode
+				if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.PLAYER) {
+						entity.components[COMPONENTS.PLAYER].lives--;
+						entity.components[COMPONENTS.POSITION].x = 400;
+						entity.components[COMPONENTS.NODE].domNode.classList.remove('--explode');
+				}
+				
+				// enemy explode
+				if(entity.components[COMPONENTS.COLLISION].collisionId === COLLISION_MASKS.ENEMY) {
+					if(entity.components[COMPONENTS.ENEMY]){
+						entity.components[COMPONENTS.ENEMY].live = false;
+					} else {
+						entity.components[COMPONENTS.BOSS].bossSpawned = false;
+					}
+					entity.components[COMPONENTS.POSITION].visible = false;
+					entity.components[COMPONENTS.POSITION].x = 800;
+				}
+				
+				explodeComponent.explodeTimerStarted = false;
+				explodeComponent.explodeTimer = 0;
+			}
+
+			if(explodeComponent.explodeTimerStarted) {
+				explodeComponent.explodeTimer++;
+			}
+		});
+	}
+}
+
+const BossSpawnSystem = {
+	init() {},
+	tick(entities) {
+		if(!entities.find(entity => entity.components[COMPONENTS.POSITION] && 
+						 		    entity.components[COMPONENTS.POSITION].y < 200 && 
+						 		    entity.components[COMPONENTS.POSITION].visible &&
+						  			entity.components[COMPONENTS.ENEMY])) {
+			
+			let boss = entities.find(entity => entity.components[COMPONENTS.BOSS])
+			let bossComponent = boss.components[COMPONENTS.BOSS];
+			let numberOfVisibleEnemies = entities.filter(entity => entity.components[COMPONENTS.ENEMY] && entity.components[COMPONENTS.POSITION].visible).length
+			
+			if(!boss.components[COMPONENTS.POSITION].visible) {
+				bossComponent.bossSpawnCooldown--;
+			}
+			
+			if(!bossComponent.bossSpawned && 
+			   	bossComponent.bossSpawnTimes < bossComponent.bossMaxSpawnTimes && 
+			    bossComponent.bossSpawnCooldown < 0 && 
+			   	numberOfVisibleEnemies > bossComponent.bossMinNumberOfEnemiesSpawn && 
+			    Math.random() * 100 + 1 > 99.99999999999999999999) {
+				
+				boss.components[COMPONENTS.NODE].domNode.classList.contains('--explode') && boss.components[COMPONENTS.NODE].domNode.classList.remove('--explode');
+				boss.components[COMPONENTS.POSITION].visible = true;	
+				boss.components[COMPONENTS.POSITION].x = 300;	
+				boss.components[COMPONENTS.PHYSICS].vx = 4 * SPEED_FACTOR;	
+				bossComponent.bossSpawned = true;
+				bossComponent.bossSpawnTimes++;
+				bossComponent.bossTimer++;
+				bossComponent.bossSpawnCooldown = 500;
+			}
+			
+			if(bossComponent.bossTimer && bossComponent.bossTimer > bossComponent.bossTime) {
+				bossComponent.bossTimer = 0;
+				bossComponent.bossSpawned = false;
+				boss.components[COMPONENTS.POSITION].visible = false;	
+			}
+			
+			if(bossComponent.bossTimer) {
+				bossComponent.bossTimer++;
+			}
+		}	
+	}
+}
+
+// 2.4 Scenes
+
+new kt.Engine.Scene({
+	name: 'GameScene',
+	init(payload) {
+		this.currentLevel = payload.level;
+		this.playerLives = payload.lives;
+		this.score = payload.score;
+		
+		this.GameECS = new kt.Engine.EntityComponentSystem();
+		
+		this.entities = [
+			new kt.Engine.Entity('PLAYER_ENTITY')
+				.addComponent(new PositionComponent(400, 720, 50, 30, true))
+				.addComponent(new NodeComponent())
+				.addComponent(new PlayerComponent(this.playerLives))
+				.addComponent(new PhysicsComponent())
+				.addComponent(new ApperanceComponent('player-asset'))
+				.addComponent(new CollisionComponent(COLLISION_MASKS.PLAYER, 0b00011))
+				.addComponent(new ExplodeComponent()),
+			new kt.Engine.Entity('PLAYER_BULLET') 
+				.addComponent(new PositionComponent(0, 720, 2, 15))
+				.addComponent(new NodeComponent())
+				.addComponent(new BulletComponent(true))
+				.addComponent(new PhysicsComponent(0, -10))
+				.addComponent(new ApperanceComponent('bullet-asset'))
+				.addComponent(new CollisionComponent(COLLISION_MASKS.BULLET, 0b01001)),
+			new kt.Engine.Entity('WORLD')
+				.addComponent(new PositionComponent(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, false))
+				.addComponent(new CollisionComponent(COLLISION_MASKS.WORLD))
+
+		];
+
+		for(let i = 1; i <= 9; i++) {
+			for(let j = 1; j <= 5; j++) {
+				let type = (j === 1) ? 2 : (j > 1 && j < 4) ? 1 : 0;
+				
+				this.entities.push(
+					new kt.Engine.Entity(`ENEMY_${i}_ENTITY`)
+						.addComponent(new PositionComponent(80 * i + 100, 40 * j + 100, 40, 30, true))
+						.addComponent(new NodeComponent())
+						.addComponent(new EnemyComponent(20, type))
+						.addComponent(new PhysicsComponent(1, 0))
+						.addComponent(new ApperanceComponent('enemy-asset', 2))
+						.addComponent(new ExplodeComponent())
+						.addComponent(new CollisionComponent(COLLISION_MASKS.ENEMY, 0b00011))
+				);
+				
+			}
+		}
+
+		for(let i = 0; i < 3; i++) {
+			this.entities.push(
+				new kt.Engine.Entity(`ENEMY_BULLET_${i}_ENTITY`)
+					.addComponent(new PositionComponent(-100, -100, 3, 15))
+					.addComponent(new NodeComponent())
+					.addComponent(new BulletComponent())
+					.addComponent(new ApperanceComponent('enemy-bullet-asset'))
+					.addComponent(new PhysicsComponent(0, 5))
+					.addComponent(new CollisionComponent(COLLISION_MASKS.BULLET, 0b10101))
+			)	
+		};
+		
+		for(let k = 0; k < 4; k++) {
+			for(let i = 0; i < OBSTACLE_ROWS ;i++) {
+				for(let j = 0; j < OBSTACLE_COLS; j++) {
+					if(!obstacleMap[j + i * OBSTACLE_COLS]) {
+						continue;
+					}
+					
+					this.entities.push(
+						new kt.Engine.Entity(`OBSTACLE_${ j + i * OBSTACLE_COLS + k * OBSTACLE_ROWS * OBSTACLE_COLS }`)
+							.addComponent(new PositionComponent(75 + OBSTACLE_WIDTH * j + (k * 250), 600 + OBSTACLE_WIDTH * i, OBSTACLE_WIDTH, OBSTACLE_WIDTH, true))
+							.addComponent(new NodeComponent())
+							.addComponent(new CollisionComponent(COLLISION_MASKS.OBSTACLE, 0b01010))
+							.addComponent(new ObstacleComponent('obstacle-1', 0))
+					);	
+				}
+			}
+		}
+		
+		this.entities.push(
+			new kt.Engine.Entity('BOSS')
+				.addComponent(new PositionComponent(0, 150, 80, 35, false))
+				.addComponent(new NodeComponent())
+				.addComponent(new BossComponent())
+				.addComponent(new PhysicsComponent(3, 0))
+				.addComponent(new ApperanceComponent('boss-asset'))
+				.addComponent(new ExplodeComponent())
+				.addComponent(new CollisionComponent(COLLISION_MASKS.ENEMY, 0b00011))
+		);
+		
+		this.entities.push(
+			new kt.Engine.Entity(`SCORE`).addComponent(new LevelComponent(this.score))
+		);
+
+		this.GameECS.addEntities(this.entities);
+		this.GameECS.addSystems([
+			RenderSystem, 
+			ControllSystem,
+			PhysicsSystem, 
+			EnemySystem,
+			CollisionSystem,
+			ObstacleSystem,
+			AnimationSystem,
+			ExplodeSystem,
+			BossSpawnSystem
+		]);
+		
+		this.ui = document.createElement('div');
+		this.ui.classList.add('game-ui');
+		this.ui.innerHTML = `
+			<div class="game-ui">
+				<div class="game-ui__menu game-ui-__menu--top">
+					<div class="game-ui__group">
+						<div class="game-ui__text">SCORE</div>
+						<div class="game-ui__value" id="score"></div>
+					</div>
+					<div class="game-ui__group">
+						<div class="game-ui__text">HI-SCORE</div>
+						<div class="game-ui__value" id="hi-score"></div>
+					</div>
+					<div class="game-ui__group">
+						<div class="game-ui__text">LEVEL</div>
+						<div class="game-ui__value" id="level"></div>
+					</div>
+					<div class="game-ui__group">
+						<div class="game-ui__text">LIVES</div>
+						<div class="game-ui__value" id="lives"></div>
+					</div>
+				</div>
+			</div>
+		`
+		GAME_SCREEEN_ELEMENT.appendChild(this.ui);
+		
+		this.hiScore = localStorage.getItem('hiScore');
+		this.hiScore = this.hiScore ? this.hiScore : 0;
+		
+		this.domElements = {
+			level: document.querySelector('#level'),
+			lives: document.querySelector('#lives'),
+			score: document.querySelector('#score'),
+			hiScore: document.querySelector('#hi-score'),
+		};
+		
+		this.domElements.hiScore.innerHTML = `${this.hiScore}`;
+		this.domElements.level.innerHTML = `${this.currentLevel}`;
+	},
+	update() {
+		this.GameECS.update();
+		kt.Engine.InputManager.update();
+		
+		let playerLives = this.entities.find(entity => entity.components[COMPONENTS.PLAYER]).components[COMPONENTS.PLAYER].lives;
+		let enemies = this.entities.filter(entity => entity.components[COMPONENTS.ENEMY] && entity.components[COMPONENTS.POSITION].visible);
+		let level = this.entities.find(entity => entity.components[COMPONENTS.LEVEL]).components[COMPONENTS.LEVEL];
+		
+		this.domElements.score.innerHTML = `${level.score}`;
+		this.domElements.lives.innerHTML = `${playerLives}`;
+		
+		
+		if(!playerLives) {
+			localStorage.setItem('hiScore', level.score);
+			
+			this.currentLevel = 0;
+			this.score = 0;
+			
+			this.hiScore = localStorage.getItem('hiScore');
+			this.hiScore = this.hiScore ? this.hiScore : 0;
+			
+			kt.Engine.SceneManager.changeScene('GameoverScene');
+		}
+		
+		if(!enemies.length) {
+			this.currentLevel++;
+			this.playerLives = playerLives + 1;
+			this.score = level.score;
+			
+			kt.Engine.SceneManager.changeScene('LoadScene', {
+				level: this.currentLevel,
+				lives: this.playerLives,
+				score: this.score
+			});
+		}
+	},
+	
+	destroy() {
+		let gameNode = document.querySelector('#game-screen');
+		while (gameNode.firstChild) {
+			gameNode.removeChild(gameNode.firstChild);
+		}
+	}
+});
+
+new kt.Engine.Scene({
+	name: 'GameoverScene', 	
+	init() {
+		this.ui = document.createElement('div');
+		this.ui.classList.add('game-over');
+		this.ui.innerHTML = `
+			<div class="game-over__text-group">
+				<h2 class="game-over__primary-header">GAME OVER</h2>
+				<h3 id="restart-text" class="game-over__secondary-header">Press SPACE to restart</h3>
+			</div>
+		`
+		
+		GAME_SCREEEN_ELEMENT.appendChild(this.ui);
+		
+		this.elements = {
+			restartText: document.querySelector('#restart-text')
+		};
+		
+		this.interval = setInterval(() => {
+			this.elements.restartText.classList.toggle('u-display-none')
+		}, 700);
+	},
+	update() {
+		if(kt.Engine.InputManager.keys[32].isPressed()) {
+			kt.Engine.SceneManager.changeScene('MenuScene');
+		}
+		
+		kt.Engine.InputManager.update();
+	},
+	destroy() {
+		let gameNode = document.querySelector('#game-screen');
+		while (gameNode.firstChild) {
+			gameNode.removeChild(gameNode.firstChild);
+		}
+	}
+});
+
+new kt.Engine.Scene({
+	name: 'MenuScene',	
+	init() {
+		this.ui = document.createElement('div');	
+		this.ui.classList.add('main-menu');
+		this.ui.innerHTML = `
+<div class="main-menu">
+	<div class="main-menu__header">
+		<h1 class="main-menu__primary-heading">SPACE</h1>
+		<h2 class="main-menu__secondary-heading">INVADERS</h2>
+	</div>
+	<div class="main-menu__enemies">
+		<figure class="main-menu__group">
+			<div id="type-0" class=" main-menu__group--enemy enemy-asset --type-0 --frame-0"></div>
+			<figcaption class="main-menu__group main-menu__group--points">= 100 pts</figcaption>
+		</figure>
+		<figure class="main-menu__group">
+			<div id="type-1" class="main-menu__group main-menu__group--enemy enemy-asset --type-1 --frame-0"></div>
+			<figcaption class="main-menu__group main-menu__group--points">= 200 pts</figcaption>
+		</figure>
+		<figure class="main-menu__group">
+			<div id="type-2" class="main-menu__group main-menu__group--enemy enemy-asset --type-2 --frame-0"></div>
+			<figcaption class="main-menu__group main-menu__group--points"> = 300 pts </figcaption>
+		</figure>
+		<figure class="main-menu__group">
+			<div class="main-menu__group main-menu__group--enemy boss-asset"></div>
+			<figcaption class="main-menu__group main-menu__group--points"> = 600 pts </figcaption>
+		</figure>
+	</div>
+	<div id="start-text" class="main-menu__start">
+		PRESS &lt;SPACE&gt; TO START
+	</div>
+
+</div>
+		`
+		
+		GAME_SCREEEN_ELEMENT.appendChild(this.ui);
+		
+		this.elements = {
+			type0: document.querySelector('#type-0'),
+			type1: document.querySelector('#type-1'),
+			type2: document.querySelector('#type-2'),
+			startText: document.querySelector('#start-text')
+		};
+		
+		this.interval = setInterval(() => {
+			this.elements.type0.classList.toggle('--frame-1');
+			this.elements.type1.classList.toggle('--frame-1');
+			this.elements.type2.classList.toggle('--frame-1');
+			this.elements.startText.classList.toggle('u-display-none');
+		}, 700)
+	
+	}, 
+	update() {
+		if(kt.Engine.InputManager.keys[32].isPressed()) {
+			kt.Engine.SceneManager.changeScene('LoadScene', {
+				lives: 3,
+				score: 0,
+				level: 0
+			});
+		}
+		
+		kt.Engine.InputManager.update();
+	},
+	destroy() {
+		let gameNode = document.querySelector('#game-screen');
+		while (gameNode.firstChild) {
+			gameNode.removeChild(gameNode.firstChild);
+		}
+		clearInterval(this.interval);
+	}
+});
+
+new kt.Engine.Scene({
+	name: 'LoadScene',
+	init(payload) {
+		this.ui = document.createElement('div');	
+		this.ui.innerHTML = `
+			<div class="load-level">
+				<div class="load-level__heading-primary">LEVEL ${payload.level}</div>
+				<div class="load-level__heading-secondary">GET READY!</div>
+			</div>
+		`;
+		
+		setTimeout(() => {
+			kt.Engine.SceneManager.changeScene('GameScene', payload);	
+		}, 700);
+		
+		GAME_SCREEEN_ELEMENT.appendChild(this.ui);
+	},
+	update() {  },
+	destroy() {
+		let gameNode = document.querySelector('#game-screen');
+		while (gameNode.firstChild) {
+			gameNode.removeChild(gameNode.firstChild);
+		}
+	}
+});
+
+kt.Engine.SceneManager.pushScene('MenuScene', { level: 0, lives: 3, score: 0 });
+kt.Engine.init();
+
+</script>
+ </BODY>
+</HTML>

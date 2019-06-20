@@ -1,0 +1,18 @@
+ html,body{
+            border: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+}
+
+.info{
+  z-index:999;
+  position : absolute;
+  left:0;
+  top:0;
+  padding:10px;
+  color:#fff;
+  background: rgba(0,0,0,0.5);
+  text-transform:capitalize;
+}

@@ -1,0 +1,1 @@
+CreateObject("SAPI.SpVoice").Speak"蒿嗨偶，肝绝忍僧衣襟捣打的高草，肝绝忍僧衣襟捣打了巅峰"

@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <style>
+  html {
+  overflow: hidden;
+  -ms-touch-action: none;
+  -ms-content-zooming: none;
+}
+
+body {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  background: #222;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  cursor: pointer;
+}
+  </style>
+ </HEAD>
+
+ <BODY>
+ <canvas id="canvas"></canvas>
+  <script>
+  ((struct) => {
+
+  // Node class
+  class Node {
+    constructor(node) {
+        this.pos = gl.vec3(node.x, node.y, node.z);
+        this.old = gl.vec3(node.x, node.y, node.z);
+        this.radius = node.w;
+        this.mass = node.mass || 1.0;
+        this.rgb = gl.vec3(node.color[0], node.color[1], node.color[2]);
+      }
+      // verlet integration
+    integrate() {
+        const [x, y, z] = this.pos.get();
+        this.pos.x += this.pos.x - this.old.x;
+        this.pos.y += this.pos.y - this.old.y - 0.001 * this.mass;
+        this.pos.z += this.pos.z - this.old.z;
+        this.old.set(x, y, z);
+      }
+      // draw node
+    draw(shader) {
+      shader.vec3('modelColor', this.rgb.x, this.rgb.y, this.rgb.z)
+        .mat4('model', gl.mat4()
+          .trans(this.pos.x, this.pos.y, this.pos.z)
+          .scale(this.radius, this.radius, this.radius)
+        )
+        .draw(sphereGeom);
+    }
+    checkScreenLimits() {
+      // ground (water?)
+      if (this.pos.y <= -1 + this.radius * 0.2) {
+        this.pos.x -= (this.pos.x - this.old.x) * 0.02;
+        this.pos.z -= (this.pos.z - this.old.z) * 0.02;
+        const d = Math.abs(-1 - this.pos.y + this.radius * 0.2);
+        this.pos.y += d / 10;
+        this.old.y = this.pos.y;
+      }
+    }
+  }
+  // constraint class
+  class Constraint {
+    constructor(n0, n1, size) {
+        this.n0 = n0;
+        this.n1 = n1;
+        this.size = size || 0;
+        this.dist = n0.pos.distance(n1.pos);
+      }
+      // solve constraint
+    solve() {
+      const n0 = this.n0.pos;
+      const n1 = this.n1.pos;
+      let dx = n0.x - n1.x;
+      let dy = n0.y - n1.y;
+      let dz = n0.z - n1.z;
+      const currentDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const delta = 0.5 * (currentDist - this.dist) / currentDist;
+      dx *= delta;
+      dy *= delta;
+      dz *= delta;
+      let m1 = (this.n0.mass + this.n1.mass);
+      let m2 = this.n0.mass / m1;
+      m1 = this.n1.mass / m1;
+      n1.x += dx * m2;
+      n1.y += dy * m2;
+      n1.z += dz * m2;
+      n0.x -= dx * m1;
+      n0.y -= dy * m1;
+      n0.z -= dz * m1;
+    }
+    draw(shader) {
+      if (!this.size) return;
+      const dx = this.n1.pos.x - this.n0.pos.x;
+      const dy = this.n1.pos.y - this.n0.pos.y;
+      const dz = this.n1.pos.z - this.n0.pos.z;
+      const ln = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      const a = -Math.atan2(dy, dz) * 180 / Math.PI;
+      const b = Math.asin(dx / ln) * 180 / Math.PI;
+
+      shader.vec3('modelColor', 1, 1, 1)
+        .mat4('model', gl.mat4()
+          .trans(this.n0.pos.x, this.n0.pos.y, this.n0.pos.z)
+          .rotatex(a)
+          .rotatey(b)
+          .trans(0, 0, ln * 0.5)
+          .scale(this.size, this.size, ln * 0.5)
+        )
+        .draw(tubeGeom);
+    }
+  }
+  // animation loop
+  const run = () => {
+      requestAnimationFrame(run);
+      // integration
+      for (let n of nodes) {
+        n.integrate();
+        n.checkScreenLimits();
+      }
+      // solve constraints
+      for (let i = 0; i < 5; i++) {
+        for (let n of constraints) {
+          n.solve();
+        }
+      }
+      // webGL rendering
+      gl
+        .adjustSize()
+        .viewport()
+        .cullFace()
+        .clearColor(0, 0, 0, 0)
+        .clearDepth(1);
+      // camera
+      camProj.perspective({
+        fov: 60,
+        aspect: gl.aspect,
+        near: 0.01,
+        far: 100
+      });
+      pointer.z = Math.min(Math.max(pointer.z, 3), 21);
+      camDist += 0.1 * ((pointer.z / 3) - camDist);
+      camView
+        .ident()
+        .trans(0, 0, -camDist);
+      // light position
+      const light = nodes[4].pos;
+      // set uniforms
+      displayShader
+        .use()
+        .vec3('uPointLightingLocation', light.x, light.y + 0.06, light.z)
+        .vec3('uPointLightingColor', 1.0, 1.0, 1.0)
+        .mat4('camProj', camProj)
+        .mat4('camView', camView);
+      // draw ground
+      displayShader.vec3('modelColor', 0.6, 1.0, 1.2)
+        .mat4('model', gl.mat4().trans(0.0, -1.0, 0.0))
+        .draw(planeGeom);
+      // draw nodes
+      for (let n of nodes) {
+        n.draw(displayShader);
+      }
+      // draw constraints
+      for (let c of constraints) {
+        c.draw(displayShader);
+      }
+      // manage pointer
+      if (pointer.isDown) {
+        if (!drag) {
+          // determine which sphere is under the pointer ?
+          let dmax = 10000,
+            over = null;
+          viewProj.multiply(camProj, camView);
+          for (let n of nodes) {
+            point.transformMat4(n.pos, viewProj);
+            let x = Math.round(((point.x + 1) / 2.0) * canvas.width);
+            let y = Math.round(((1 - point.y) / 2.0) * canvas.height);
+            let dx = Math.abs(pointer.x - x);
+            let dy = Math.abs(pointer.y - y);
+            let d = Math.sqrt(dx * dx + dy * dy);
+            if (d < dmax) {
+              dmax = d;
+              over = n;
+            }
+          }
+          canvas.elem.style.cursor = 'move';
+          drag = over;
+          rgb.copy(drag.rgb);
+          if (drag.radius !== 0.1) drag.rgb.set(2, 1, 0);
+        }
+        // dragging
+        let x = (2.0 * pointer.x / canvas.width - 1) * 0.55 * camDist * gl.aspect;
+        let y = (-2.0 * pointer.y / canvas.height + 1) * 0.55 * camDist;
+        drag.pos.x += (x - drag.pos.x) * 0.2;
+        drag.pos.y += (y - drag.pos.y) * 0.2;
+        drag.pos.z *= 0.99;
+        drag.old.copy(drag.pos);
+      } else {
+        // stop dragging
+        if (drag) {
+          canvas.elem.style.cursor = 'pointer';
+          drag.rgb.copy(rgb);
+          drag = null;
+        }
+      }
+    }
+    /**
+     * Init script
+     */
+  const canvas = new Canvas("canvas");
+  const gl = new WebGL(canvas).depthTest();
+  const pointer = new Pointer(canvas);
+  const point = gl.vec3();
+  const camProj = gl.mat4();
+  const camView = gl.mat4();
+  const viewProj = gl.mat4();
+  const planeGeom = gl.drawable(gl.plane(60));
+  const sphereGeom = gl.drawable(gl.sphere(1, 36));
+  const tubeGeom = gl.drawable(gl.cylinder(1, 36));
+  const nodes = [];
+  const constraints = [];
+  let drag = null;
+  let rgb = gl.vec3();
+  let camDist = 3;
+  pointer.z = camDist * 3;
+
+  canvas.enableFullscreen({
+    position: 'absolute',
+    right: '7px',
+    bottom: '7px',
+    cursor: 'pointer',
+    background: '#1e1e1e',
+    fontFamily: 'Lato, Lucida Grande, Lucida Sans Unicode, Tahoma, Sans-Serif',
+    fontSize: '0.8rem',
+    padding: '2px 7px',
+    borderRadius: '3px',
+    border: '3px solid transparent',
+    color: 'white',
+    whiteSpace: 'nowrap',
+    textAlign: 'center',
+    userSelect: 'none'
+  });
+
+  const displayShader = gl.shader({
+    vertex: `
+			uniform mat4 camProj, camView;
+			uniform mat4 model;
+			attribute vec3 position, normal;
+			varying vec3 vLigthPosition;
+			varying vec3 vNormal;
+			void main(){
+				vec4 vWorldPosition = model * vec4(position, 1.0);
+				gl_Position = camProj * camView * vWorldPosition;
+				vLigthPosition = vWorldPosition.xyz;
+				vNormal = normal;
+			}
+    `,
+    fragment: `
+			uniform vec3 modelColor;
+			uniform vec3 uPointLightingLocation;
+			uniform vec3 uPointLightingColor;
+			varying vec3 vLigthPosition;
+			varying vec3 vNormal;
+			void main(){
+				vec3 lightDirection = normalize(uPointLightingLocation - vLigthPosition);
+				float angle = max(dot(lightDirection, vNormal), 0.001);
+				vec3 diffuse = pow(uPointLightingColor * angle * modelColor, vec3(1.0));
+				gl_FragColor = vec4(diffuse, 1.0);
+			}
+    `
+  });
+
+  // load nodes
+  for (let n in struct.nodes) {
+    const node = new Node(struct.nodes[n]);
+    struct.nodes[n].id = node;
+    nodes.push(node);
+  }
+  // define constraints
+  for (let i = 0; i < struct.constraints.length; i++) {
+    constraints.push(new Constraint(
+      struct.nodes[struct.constraints[i][0]].id,
+      struct.nodes[struct.constraints[i][1]].id,
+      struct.constraints[i][2]
+    ));
+  }
+  nodes[3].pos.x += 0.01;
+  nodes[3].pos.z += 0.01;
+  run(); 
+})({
+  nodes: {
+    n0: {
+      x: 0,
+      y: 1,
+      z: -0.57735,
+      w: 0.2,
+      mass: 1.0,
+      color: [1.5, 1.2, 0.8]
+    },
+    n1: {
+      x: 0.5,
+      y: 1,
+      z: 0.288675,
+      w: 0.2,
+      mass: 1.0,
+      color: [1.5, 1.2, 0.8]
+    },
+    n2: {
+      x: -0.5,
+      y: 1,
+      z: 0.288675,
+      w: 0.2,
+      mass: 1.0,
+      color: [1.5, 1.2, 0.8]
+    },
+    n3: {
+      x: 0,
+      y: 1.7,
+      z: 0,
+      w: 0.2,
+      mass: 1.0,
+      color: [0.8, 1.2, 1.5]
+    },
+    // light
+    n4: {
+      x: 0,
+      y: 1.2,
+      z: 0,
+      w: 0.1,
+      mass: 0.6,
+      color: [1000.0, 1000.0, 1000.0]
+    }
+  },
+  constraints: [
+    ["n0", "n1", 0.01],
+    ["n1", "n2", 0.01],
+    ["n2", "n0", 0.01],
+    ["n0", "n3", 0.01],
+    ["n1", "n3", 0.01],
+    ["n2", "n3", 0.01],
+    ["n3", "n4"]
+  ]
+});
+  </script>
+ </BODY>
+</HTML>

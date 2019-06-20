@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>兮夜老師</title>
+    <style>
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <script src='js/lovely.js'></script>
+    <div></div>
+    <script>
+        var blobs = [];
+
+        function setup() {
+            var iHeight = window.innerHeight;
+            if (iHeight < 500) {
+                iHeight = 500;
+            }
+            createCanvas(window.innerWidth, iHeight);
+
+            drawingContext.shadowOffsetX = 0;
+            drawingContext.shadowOffsetY = 0;
+            drawingContext.shadowBlur = 60;
+            drawingContext.shadowColor = "rgb(255, 176, 190)";
+
+            for (var i = 0; i < 13; i++) {
+                blobs.push(new Blob(random(width), random(height)));
+            }
+        }
+
+        function draw() {
+            background(13, 33);
+
+            for (var b = 0; b < blobs.length; b++) {
+                blobs[b].update();
+                blobs[b].show();
+            }
+        }
+
+        function Blob(x, y) {
+            this.pos = createVector(x, y);
+            this.vel = p5.Vector.random2D();
+            this.vel.mult(random(1, 3));
+            this.r = random(42, 72);
+            this.yoff = random(1000);
+
+            this.update = function() {
+                this.pos.add(this.vel);
+                if (this.pos.x > width || this.pos.x < 0) {
+                    this.vel.x *= -1;
+                }
+                if (this.pos.y > height || this.pos.y < 0) {
+                    this.vel.y *= -1;
+                }
+            }
+
+            this.show = function() {
+                noStroke();
+                fill(255);
+                push();
+                translate(this.pos.x, this.pos.y);
+                beginShape();
+                var xoff = 0;
+                for (var a = 0; a < TWO_PI; a += 0.1) {
+                    var offset;
+                    if (a > PI/6 && a < 5 * PI/6) {
+                        offset = map(noise(xoff, this.yoff), 0, 1, -0.31 * this.r, 0.78 * this.r);
+                    } else {
+                        offset = map(noise(xoff, this.yoff), 0, 1, -0.08 * this.r, 0.08 * this.r);
+                    }
+                    var r = this.r + offset;
+                    var x = r * cos(a);
+                    var y = r * sin(a);
+                    vertex(x, y);
+                    xoff += 0.1;
+                }
+                endShape(CLOSE);
+
+                this.yoff += 0.08;
+                pop();
+
+                var eyeOffset = 0.23 * this.r;
+
+                stroke(54);
+                fill(54);
+                ellipse(this.pos.x - eyeOffset, this.pos.y - eyeOffset, 0.16 * this.r, 0.23 * this.r);
+                ellipse(this.pos.x + eyeOffset, this.pos.y - eyeOffset, 0.16 * this.r, 0.23 * this.r);
+                strokeWeight(4);
+                line(this.pos.x - eyeOffset * 2, this.pos.y - eyeOffset * 2, this.pos.x, this.pos.y - eyeOffset);
+                line(this.pos.x + eyeOffset * 2, this.pos.y - eyeOffset * 2, this.pos.x, this.pos.y - eyeOffset);
+                fill(255);
+                noStroke();
+                ellipse(this.pos.x - eyeOffset, this.pos.y - eyeOffset - 3, 0.08 * this.r, 0.125 * this.r);
+                ellipse(this.pos.x + eyeOffset, this.pos.y - eyeOffset - 3, 0.08 * this.r, 0.125 * this.r);
+
+                fill(54);
+                arc(this.pos.x, this.pos.y, 0.5 * this.r, 0.5 * this.r, 0, PI);
+            }
+        }
+    </script>
+</body>
+</html>

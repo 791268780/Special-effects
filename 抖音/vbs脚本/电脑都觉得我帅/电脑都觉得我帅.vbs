@@ -1,0 +1,1 @@
+CreateObject("SAPI.SpVoice").Speak"兮夜老师你真帅，不愧是长沙吴彦祖"

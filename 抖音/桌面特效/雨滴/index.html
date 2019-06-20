@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>雨滴特效-兮夜老师</title>
+    <style>
+        *{margin:0;}
+        canvas{
+            background: #000;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        var oC = document.querySelector('canvas');
+        var cxt = oC.getContext('2d');
+        var w = oC.width = window.innerWidth;
+        var h = oC.height = window.innerHeight;
+        var count = 30;
+        var drops = [];  // 每个雨滴
+        var onOff = true;
+        window.onresize = function () {
+            w = oC.width = window.innerWidth;
+            h = oC.height = window.innerHeight;
+        }
+        function Drop() {}
+        Drop.prototype={
+            init:function () {
+                this.x = random(1,w); // 水平位置随机
+                this.y = 0; // 雨滴起始位置
+                this.r = 1; // 半径
+                this.vy = random(3,5); // Y轴速度
+                this.vr = 1 // 半径的速度
+                this.a = 1; // 初始不透明 逐渐透明
+                this.va = 0.95; // 透明度越乘越小
+                this.l = random(h*0.7,h*0.9);  // 雨滴的最大长度（位置）
+            },
+            // 绘制
+            draw:function () {
+                if( this.y > this.l ){  // 达到了终点
+                    cxt.beginPath();
+                    cxt.strokeStyle = 'rgba(255,255,255,'+this.a+')';
+                    cxt.arc(this.x,this.y,this.r,0,2*Math.PI,false);
+                    cxt.stroke();
+                }else{
+                    cxt.beginPath();
+                    cxt.fillStyle = randomColor();
+                    cxt.fillRect(this.x,this.y,2,10);
+                }
+
+
+                this.updata();
+            },
+            updata:function () {
+                if( this.y < this.l){ // 没有达到最大位置
+                    this.y += this.vy;
+                }else{  // 达到最大的位置
+                    if( this.a > 0.03 ){ //还没有完全透明掉
+                        this.r += this.vr;
+                        if( this.r > 50 ){
+                            this.a *= this.va; // 越乘越小 最终透明掉 a接受于0
+                        }
+                    }else{
+                        this.init();
+                    }
+
+                }
+            }
+        }
+        
+        //var oDrops = new Drop();
+        // 不断更新位置
+        function move() {
+            if(onOff){
+                cxt.fillStyle = 'rgba(0,0,0,0.1)';
+                cxt.fillRect(0,0,w,h);
+            }else{
+                cxt.clearRect(0,0,w,h);
+            }
+
+            for ( var i=0;i<count;i++ ){
+                drops.push(new Drop());
+                drops[i].draw();
+            }
+            requestAnimationFrame(move);
+        }
+        move();
+        //console.log( drops )
+        function random(min,max) {
+            return Math.random()*(max-min)+min;
+        }
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            return 'rgb('+r+','+g+','+b+')';
+        }
+    </script>
+</body>
+</html>

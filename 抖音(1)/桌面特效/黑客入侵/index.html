@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>黑客入侵-兮夜老师</title>
+    <style>
+        *{margin: 0}
+        canvas{background: black;display: block}
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        var oC = document.querySelector('canvas');
+        var cxt = oC.getContext('2d');
+        var w = oC.width = window.innerWidth;
+        var h = oC.height = window.innerHeight;
+        var onOff = true;
+        window.addEventListener('resize',function () {
+            w = oC.width = window.innerWidth;
+            h = oC.height = window.innerHeight;
+        });
+
+        var arr = new Array(255).join('1').split('');
+        console.log( arr )
+        draw();
+        function draw() {
+            if(onOff){
+                cxt.fillStyle = 'rgba(0,0,0,0.05)';
+                cxt.fillRect(0,0,w,h);
+            }else{
+                cxt.clearRect(0,0,w,h);
+            }
+            cxt.fillStyle = randomColor();
+            arr.map(function (value,index) {
+                cxt.font = '16px 宋体';
+                text = String.fromCharCode(65+Math.random()*57);// 把ASCII转换成对应的字符串;
+                x = index*10;
+
+                cxt.fillText(text,x,value);
+                arr[index] = ( (value>h+Math.random()*500)?0:value+15 );
+            })
+            requestAnimationFrame(draw);
+        }
+
+        function randomColor() {
+            var r = Math.floor(Math.random()*256);
+            var g = Math.floor(Math.random()*256);
+            var b = Math.floor(Math.random()*256);
+            return 'rgb('+r+','+g+','+b+')';
+        }
+    </script>
+</body>
+</html>
